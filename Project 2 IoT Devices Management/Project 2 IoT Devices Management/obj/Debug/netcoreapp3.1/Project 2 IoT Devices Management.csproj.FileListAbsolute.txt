@@ -1,4 +1,3 @@
-C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\obj\Debug\netcoreapp3.1\Project 2 IoT Devices Management.csproj.AssemblyReference.cache
 C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\obj\Debug\netcoreapp3.1\Project 2 IoT Devices Management.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\obj\Debug\netcoreapp3.1\Project 2 IoT Devices Management.AssemblyInfoInputs.cache
 C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\obj\Debug\netcoreapp3.1\Project 2 IoT Devices Management.AssemblyInfo.cs
@@ -137,3 +136,4 @@ C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices
 C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\Ian\source\repos\Project 2 IoT Devices Management\Project 2 IoT Devices Management\obj\Debug\netcoreapp3.1\Project 2 IoT Devices Management.csproj.AssemblyReference.cache

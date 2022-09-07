@@ -9,6 +9,8 @@ using Project_2_IoT_Devices_Management.Model;
 
 namespace Project_2_IoT_Devices_Management.Controllers
 {
+    [Route("API/[controller]")]
+    [ApiController]
     public class DevicesController : Controller
     {
         private readonly Project2databaseContext _context;
@@ -19,12 +21,14 @@ namespace Project_2_IoT_Devices_Management.Controllers
         }
 
         // GET: Devices
+        [HttpGet("getDevicesAll")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Device.ToListAsync());
         }
 
         // GET: Devices/Details/5
+        [HttpGet("getDevice/{id}")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -42,16 +46,12 @@ namespace Project_2_IoT_Devices_Management.Controllers
             return View(device);
         }
 
-        // GET: Devices/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+      
 
         // POST: Devices/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("deviceAdd")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActvie,DateCreated")] Device device)
         {
@@ -65,26 +65,8 @@ namespace Project_2_IoT_Devices_Management.Controllers
             return View(device);
         }
 
-        // GET: Devices/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var device = await _context.Device.FindAsync(id);
-            if (device == null)
-            {
-                return NotFound();
-            }
-            return View(device);
-        }
-
-        // POST: Devices/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+       
+        [HttpPatch]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActvie,DateCreated")] Device device)
         {
@@ -117,6 +99,7 @@ namespace Project_2_IoT_Devices_Management.Controllers
         }
 
         // GET: Devices/Delete/5
+        [HttpDelete("deviceDelete")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
