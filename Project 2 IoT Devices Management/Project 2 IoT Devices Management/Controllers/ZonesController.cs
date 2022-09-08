@@ -24,7 +24,7 @@ namespace Project_2_IoT_Devices_Management.Controllers
         [HttpGet("getAllZones")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Zone.ToListAsync());
+            return Ok(await _context.Zone.ToListAsync());
         }
 
         // GET: Zones/Details/5
@@ -43,47 +43,30 @@ namespace Project_2_IoT_Devices_Management.Controllers
                 return NotFound();
             }
 
-            return View(zone);
+            return Ok(zone);
         }
 
 
-        // POST: Zones/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("zoneAdd")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
+        public async Task<IActionResult> Create(Zone zone)
         {
-            if (ModelState.IsValid)
-            {
-                zone.ZoneId = Guid.NewGuid();
-                _context.Add(zone);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(zone);
+            zone.ZoneId = Guid.NewGuid();
+            _context.Zone.Add(zone);
+            await _context.SaveChangesAsync();
+            return Ok("Added");
         }
 
        
-
-        // POST: Zones/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPatch("zoneEdit")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
+        public async Task<IActionResult> Edit(Zone zone)
         {
-            if (id != zone.ZoneId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            if (ZoneExists(zone.ZoneId))
             {
                 try
                 {
-                    _context.Update(zone);
+                    _context.Zone.Update(zone);
                     await _context.SaveChangesAsync();
+                    return Ok("Edited");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -96,27 +79,45 @@ namespace Project_2_IoT_Devices_Management.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Ok("Error");
             }
-            return View(zone);
+            return NotFound("Not found");
         }
 
         
 
         // POST: Zones/Delete/5
-        [HttpDelete("zoneDelete/{id}"), ActionName("Delete")]
+        [HttpDelete("zoneDelete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var zone = await _context.Zone.FindAsync(id);
             _context.Zone.Remove(zone);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok("Deleted");
         }
 
         private bool ZoneExists(Guid id)
         {
             return _context.Zone.Any(e => e.ZoneId == id);
+        }
+
+        [HttpGet("getDevicesInZone/{id}")]
+        public async Task<IActionResult> getDevicesInZone(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            List<Device> zone = await _context.Device
+                .Where(m => m.ZoneId == id).ToListAsync();
+            if (zone == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(zone);
         }
     }
 }

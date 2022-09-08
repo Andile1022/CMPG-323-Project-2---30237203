@@ -24,7 +24,7 @@ namespace Project_2_IoT_Devices_Management.Controllers
         [HttpGet("getCategoriesAll")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            return Ok(await _context.Category.ToListAsync());
         }
 
         // GET: Categories/Details/5
@@ -43,41 +43,60 @@ namespace Project_2_IoT_Devices_Management.Controllers
                 return NotFound();
             }
 
-            return View(category);
+            return Ok(category);
         }
 
-        [HttpPost("categoryAdd")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,CategoryName,CategoryDescription,DateCreated")] Category category)
+        [HttpGet("getCategoryDevices/{id}")]
+        public async Task<IActionResult> categoryDevices(Guid? id)
         {
-            if (ModelState.IsValid)
-            {
-                category.CategoryId = Guid.NewGuid();
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(category);
-        }
-
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("categoryEdit")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("CategoryId,CategoryName,CategoryDescription,DateCreated")] Category category)
-        {
-            if (id != category.CategoryId)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            List<Device> category = await _context.Device
+                .Where(m => m.CategoryId == id).ToListAsync();
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(category);
+        }
+
+        [HttpGet("getCategoryZones/{id}")]
+        public async Task<IActionResult> zonesInCategory(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            int zones = await _context.Device
+                .FromSqlRaw("Select Device.DeviceId, Device.CategoryId from Device join Zone on Device.ZoneId=Zone.ZoneId").Where(m => m.CategoryId == id).CountAsync();
+
+            return Ok(zones);
+        }
+
+        [HttpPost("categoryAdd")]
+        public async Task<IActionResult> Create(Category category)
+        {
+            category.CategoryId = Guid.NewGuid();
+            _context.Category.Add(category);
+            await _context.SaveChangesAsync();
+            return Ok("Added"); ;
+        }
+
+        [HttpPatch("categoryEdit")]
+        public async Task<IActionResult> Edit(Category category)
+        {
+            if (CategoryExists(category.CategoryId))
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Category.Update(category);
                     await _context.SaveChangesAsync();
+                    return Ok("Edited");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -90,39 +109,19 @@ namespace Project_2_IoT_Devices_Management.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Ok("Error");
             }
-            return View(category);
-        }
-
-        // GET: Categories/Delete/5
-        [HttpDelete("categoryDelete")]
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.CategoryId == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
+            return Ok("Not valid");
         }
 
         // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var category = await _context.Category.FindAsync(id);
             _context.Category.Remove(category);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok("Deleted");
         }
 
         private bool CategoryExists(Guid id)

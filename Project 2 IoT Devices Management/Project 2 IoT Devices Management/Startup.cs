@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Project_2_IoT_Devices_Management.Controllers;
 using Project_2_IoT_Devices_Management.Model;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,9 @@ namespace Project_2_IoT_Devices_Management
             ));
             services.AddDbContext<Project2databaseContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("project2connectionstring")));
             services.AddControllers();
+            services.AddScoped<ZonesController,ZonesController>();
+            services.AddScoped<CategoriesController, CategoriesController>();
+            services.AddScoped<DevicesController, DevicesController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
